@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('./head.ejs', {title: "Todo"}); -%>
+</head>
+<body>
+    <h1>Ma todo</h1>
+    <ul>
+        <% if(true) {
+            for(let i = 0; i < value.length; i++ ) { %>
+                <li><%= i %> : <%= value[i] %></li>
+            <% }
+        } %>
+    </ul>
+    <form method="POST" action="/todo/ajouter/">
+        <label for="todo">Quelque chose à faire ?</label>
+        <input type="text" id="todo" name="todo" placeholder="Ecrivez ici !">
+        <button type="submit">valider</button>
+    </form>
+</body>
+<%- include('./foot.ejs'); -%>
+</html>
