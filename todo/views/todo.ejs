@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('./head.ejs', {title: "Todo"}); -%>
+</head>
+<body>
+    <%- include('./header.ejs'); -%>
+    <div class="container">
+        <h1>Ma todo</h1>
+        <ul class="list-group my-3">
+            <% for(let i = 0; i < value.length; i++ ) { %>
+                <li class="list-group-item">
+                    <a href="/todo/supprimer/<%= i %>">x</a>
+                    <span><%= value[i] %></span>
+                </li>
+            <% } %>
+        </ul>
+        <form method="POST" action="/todo/ajouter" class="form row">
+            <label for="todo" class="col">Quelque chose à faire ?</label>
+            <input type="text" id="todo" name="todo" placeholder="Ecrivez ici !" class="form-control col mx-5">
+            <button type="submit" class="btn btn-outline-success col">valider</button>
+        </form>
+    </div>
+</body>
+<%- include('./foot.ejs'); -%>
+</html>
