@@ -1,22 +1,50 @@
-var http = require("http");
-var fs = require("fs");
-var path = require("path");
+let path = require("path");
+let ent = require("ent");
+let express = require("express");
 
-
-
-var server = http.createServer(function(req, res) {
-    fs.readFile("socket/index.html", "utf-8", function(error, content) {
-        res.writeHead(200, {"Content-Type": "text/html"});
-        res.end(content);
-    });
+let expressSession = require("express-session")({
+    secret: "Session secret key",
+    resave: true,
+    saveUninitialized: true
 });
 
+let app = express();
+let server = require("http").Server(app);
+let io = require("socket.io")(server);
 
-var io = require("socket.io").listen(server);
-
-
-io.sockets.on("connection", function (socket) {
-    console.log("Un client est connecté !");
-});
+let sharedSession = require("express-socket.io-session");
+io.use(sharedSession(expressSession));
 
 server.listen(8080);
+
+
+app
+.use(expressSession)
+
+.get("/", function(req, res) {
+    res.sendFile(path.resolve() + "/socket/index.html");
+})
+
+
+io.on('connection', function (socket) {
+
+    console.log(socket.handshake.session.pseudo);
+
+    if(!socket.handshake.session.isNamed) {
+        socket.emit("askPseudo");
+    }
+
+    socket.on("pseudo", function(pseudo) {
+
+        socket.handshake.session.pseudo = pseudo;
+        socket.handshake.session.isNamed = true;
+        socket.handshake.session.save();
+
+        console.log(socket.handshake.session.pseudo + " est connecté");
+    })
+
+    socket.on("message", function(message) {
+        console.log(socket.handshake.session.pseudo + " vous envoi le message : " + message);
+        socket.broadcast.emit("message", socket.handshake.session.pseudo, ent.encode(message));
+    })
+});
