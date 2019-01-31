@@ -33,14 +33,18 @@ io.on('connection', function (socket) {
     if(!socket.handshake.session.isNamed) {
         socket.emit("askPseudo");
     }
-
+    
     socket.on("pseudo", function(pseudo) {
-
-        socket.handshake.session.pseudo = pseudo;
-        socket.handshake.session.isNamed = true;
-        socket.handshake.session.save();
-
-        console.log(socket.handshake.session.pseudo + " est connecté");
+        
+        if(pseudo == null || pseudo == "") {            
+            socket.emit("askPseudo");
+        } else {
+            socket.handshake.session.pseudo = ent.encode(pseudo, { special: { é: true } });
+            socket.handshake.session.isNamed = true;
+            socket.handshake.session.save();
+            
+            console.log(socket.handshake.session.pseudo + " est connecté");
+        }
     })
 
     socket.on("message", function(message) {

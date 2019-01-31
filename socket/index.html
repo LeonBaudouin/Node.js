@@ -4,25 +4,28 @@
         <meta charset="utf-8" />
         <title>Socket.io</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <style>
+            #messages {
+                height: 400px;
+            }
+        </style>    
     </head>
  
     <body>
         <nav class="navbar navbar-light bg-light">
             <span class="navbar-brand mb-0 h1">Super Chat</span>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Déconnexion</button>
+            <button class="btn btn-outline-success my-2 my-sm-0">Déconnexion</button>
         </nav>
         <div class="container">
-            <h1>Communication avec socket.io !</h1>
-
-            <form class="form-group" id="form">
-                <label for="chat">Super Chat</label><br>
-                <input type="text" id="chat" name="chat">
-                <input type="submit" id="submit" value="Envoyer">
-            </form>
-    
-            <div id="messages">
-    
+            <h1 class="my-4 text-center">Communication avec socket.io !</h1>
+            
+            <div id="messages" class="bg-dark rounded shadow p-3 justify-content-end d-flex flex-column">
             </div>
+
+            <form class="form-group row my-4" id="form">
+                <input class="form-control col-8 offset-1 mr-4" type="text" id="chat" name="chat">
+                <input class="btn btn-primary mb-2 col-2" type="submit" id="submit" value="Envoyer">
+            </form>
         </div>
 
 
@@ -36,7 +39,7 @@
             
             let messages = document.querySelector("#messages");
 
-            socket.on("message", function(pseudo ,message) {
+            socket.on("message", function(pseudo, message) {
                 console.log(message);
                 addMessage(pseudo, message);
             });
@@ -47,10 +50,10 @@
             });
  
             let form = document.querySelector("#form");
-            let chat = document.querySelector("#chat");
+            let input = document.querySelector("#chat");
             
             form.addEventListener("submit", function(e) {
-                e.preventDefault;
+                e.preventDefault();
                 message = input.value;
                 if(message != "") {
                     socket.emit("message", message);
@@ -61,8 +64,13 @@
 
             function addMessage(pseudo, message) {
                 let paragraph = document.createElement("p");
-                paragraph.innerHTML = "<strong>" + pseudo + "</strong> : " + message;
+                paragraph.classList.add("m-0");
+                paragraph.innerHTML = genMessage(pseudo, message);
                 messages.append(paragraph);
+            }
+
+            function genMessage(pseudo, message) {
+                return "<span class='text-warning font-weight-bold'>" + pseudo + " : </span><span class='text-light'>" + message + "</span>";
             }
         </script>
     </body>
