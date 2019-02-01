@@ -4,7 +4,7 @@ let fs = require("fs");
 
 let output = [];
 
-lineReader.eachLine('./createJson/inputs.txt', "utf8", (line, last) => {
+lineReader.eachLine('./createJson/doc.txt', "utf8", (line, last) => {
     output.push(line.substring(
         line.lastIndexOf("\{") + 1, 
         line.lastIndexOf("\}")
@@ -12,7 +12,7 @@ lineReader.eachLine('./createJson/inputs.txt', "utf8", (line, last) => {
     
     if(last) {
         console.log(output.length);
-        fs.writeFile('./createJson/outputs.txt', JSON.stringify(output), (err) => {
+        fs.writeFile('./createJson/docJson.json', JSON.stringify(output), (err) => {
             if (err) throw err;
         })
     }

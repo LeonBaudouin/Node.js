@@ -5,7 +5,8 @@
   "scripts": {
     "todo": "node ./todo/app.js",
     "socket": "node ./socket/app.js",
-    "json": "node ./createJson/app.js"
+    "docToJSON": "node ./createJson/docToJSON.js",
+    "spriteData": "node ./createJson/spriteDataSource.js"
   },
   "devDependencies": {
     "body-parser": "^1.18.3",
